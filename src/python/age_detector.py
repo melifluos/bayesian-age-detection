@@ -6,11 +6,7 @@ Trainining outputs a predictive model that consumes an edge list of Twitter IDs 
 
 __author__ = 'benchamberlain'
 
-"""
-TODO:
-- Get the dataset into a form where I can quickly test things (sample, convert to sparse matrix / pickle)
--
-"""
+
 import numpy as np
 import pandas as pd
 import utils
@@ -80,9 +76,6 @@ class AgeDetector:
         n_cats, _ = self.model.shape
         # create an array for storing the joint log probabilities
         joint = np.zeros(shape=(X.shape[0], n_cats))
-        print 'model', self.model.shape
-        print 'data', X.shape
-        print 'joint', joint.shape
         # This is the fastest way of iterating through nonzero elements of a sparse matrix
         # http://stackoverflow.com/questions/4319014/iterating-through-a-scipy-sparse-vector-or-matrix
         coo_mat = X.tocoo()
@@ -128,6 +121,7 @@ def run_cv_pred(X, y, clf, n_folds):
         clf.fit(X_train, y_train)
         preds = clf.predict(X_test)
         macro, micro = utils.get_metrics(preds, y[test_index])
+        print 'run ', idx
         print 'macro: ', macro
         print 'micro: ', micro
         y_pred[test_index] = preds
@@ -136,8 +130,8 @@ def run_cv_pred(X, y, clf, n_folds):
 
 
 if __name__ == '__main__':
-    y_path = 'resources/test/balanced7_10_thresh_y.p'
-    x_path = 'resources/test/balanced7_10_thresh_X.p'
+    y_path = '../../resources/labels.p'
+    x_path = '../../resources/features.p'
     x, y = utils.read_data(x_path, y_path, threshold=0)
     clf = AgeDetector()
     n_folds = 3
