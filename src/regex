@@ -1,0 +1,9 @@
+awk '{for (i=2; i<=NF; i+=2) {gsub (/,/, "p1p2p3p4p", $i)} print $0 }' FS="\"" OFS="\"" $x > temp
+awk '{print $2, $3, $6}' FS="," OFS="," temp | 
+sed 's/p1p2p3p4p/\,/g' | egrep -i "[\'a][mn] [][0-9][0-9][ \,\.\!\;y][ \/yea]| 
+[ua]is[ ][0-9][0-9][ \,\.\!\;a][an]|bin[ ][0-9][0-9][ ]| [hg]o[ ][0-9][0-9][ a][an][on]" >> temp1.csv
+sed "s/.*[hghia\'][mnso][ ]\([0-9][0-9]\)[ \,\.\!\;ya]
+[ \/yean].*/\1/I;s/.*bin[ ]\([0-9][0-9]\)[ ].*/\1/I" temp1.csv | 
+egrep -v -i "more than [0-9][0-9]| "think i am [0-9][0-9]|think i'm [0-9][0-9]| 
+i feel like [0-9][0-9] | depuis [0-9][0-9]| [a-ln-su-z] an [0-9][0-9]" > temp2.csv
+awk '{getline a < "temp2.csv"; print $0","a}' temp1.csv > temp3.csv
