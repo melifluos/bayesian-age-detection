@@ -6,12 +6,12 @@ Trainining outputs a predictive model that consumes an edge list of Twitter IDs 
 
 __author__ = 'benchamberlain'
 
-
 import numpy as np
 import pandas as pd
 import utils
 import itertools
-from sklearn.model_selection import KFold, StratifiedKFold
+from sklearn.model_selection import StratifiedKFold
+import argparse
 
 
 class AgeDetector:
@@ -130,9 +130,21 @@ def run_cv_pred(X, y, clf, n_folds):
 
 
 if __name__ == '__main__':
-    y_path = '../../resources/labels.p'
-    x_path = '../../resources/features.p'
-    x, y = utils.read_data(x_path, y_path, threshold=0)
+    parser = argparse.ArgumentParser(description='Run age detector on public 7 class dataset',
+                                     epilog='Classes are 0: 10-19, 1: 20-29, 2: 30-39, 3: 40-49, 4: 50-59, 5: 60-69, 6: 70-79')
+    parser.add_argument(
+        'x_path', type=str,
+        nargs='+', default='resources/features.p', help='the location of the features')
+    parser.add_argument(
+        'y_path', type=str,
+        nargs='+', default='resources/labels.p', help='the location of the labels')
+    parser.add_argument(
+        '-nfolds', type=int,
+        nargs='+', default=3, help='number of stratified folds to split the data into for cross-validation')
+
+    args = parser.parse_args()
+
+    x, y = utils.read_data(args.x_path[0], args.y_path[0], threshold=0)
     clf = AgeDetector()
-    n_folds = 3
+    n_folds = args.nfolds[0]
     y_pred = run_cv_pred(x, y, clf, n_folds)
