@@ -9,10 +9,10 @@ import numpy as np
 
 def preprocess_income_data(label_path, edge_path, x_path, y_path, edge_list_path):
     targets = pd.read_csv(label_path, sep=' ')
-    targets.columns = ['fan_id', 'mean_income']
+    targets.columns = ['out_id', 'mean_income']
     print 'target labels of shape: ', targets.shape
     edges = pd.read_csv(edge_path)
-    edges.columns = ['fan_id', 'star_id']
+    edges.columns = ['out_id', 'in_id']
     print 'edge list of shape: ', edges.shape
     all_data = edges.merge(targets)
     print 'all data of shape: ', all_data.shape
@@ -23,30 +23,30 @@ def preprocess_income_data(label_path, edge_path, x_path, y_path, edge_list_path
 
 def preprocess_data(input_data):
     """
-    Reads a csv with columns fan_id star_id star_idx num_followers cat weight
+    Reads a csv with columns out_id in_id in_idx num_followers cat weight
     Removes duplicates and creates and produces data in standard machine learning format X,y
     :param path: path to the training data
-    :return: sparse csc matrix X of [fan_idx,star_idx]
+    :return: sparse csc matrix X of [out_idx,in_idx]
     :return: numpy array y of target categories
     """
-    input_data = input_data.drop_duplicates(['fan_id', 'star_id'])
+    input_data = input_data.drop_duplicates(['out_id', 'in_id'])
     print 'input data of shape: ', input_data.shape, ' after duplicate removal'
-    # replace the fan ids with an index
-    fan_ids = input_data['fan_id'].drop_duplicates()
-    fan_idx = np.arange(len(fan_ids))
-    fan_lookup = pd.DataFrame(data={'fan_id': fan_ids.values, 'fan_idx': fan_idx}, index=fan_idx)
-    with_fan_idx = input_data.merge(fan_lookup, 'left')
-    print 'input data of shape: ', with_fan_idx.shape, ' after adding fan idx'
-    # add star index
-    star_ids = input_data['star_id'].drop_duplicates()
-    star_idx = np.arange(len(star_ids))
-    star_lookup = pd.DataFrame(data={'star_id': star_ids.values, 'star_idx': star_idx}, index=star_idx)
-    all_data = with_fan_idx.merge(star_lookup, 'left')
-    print 'input data of shape: ', all_data.shape, ' after adding star idx'
-    edge_list = all_data[['fan_idx', 'star_idx']]
-    edge_list.columns = ['fan_idx', 'star_idx']
-    all_data.set_index('fan_id', inplace=True)
-    y = all_data[['fan_idx', 'mean_income']].drop_duplicates()
+    # replace the out ids with an index
+    out_ids = input_data['out_id'].drop_duplicates()
+    out_idx = np.arange(len(out_ids))
+    out_lookup = pd.DataFrame(data={'out_id': out_ids.values, 'out_idx': out_idx}, index=out_idx)
+    with_out_idx = input_data.merge(out_lookup, 'left')
+    print 'input data of shape: ', with_out_idx.shape, ' after adding out idx'
+    # add in index
+    in_ids = input_data['in_id'].drop_duplicates()
+    in_idx = np.arange(len(in_ids))
+    in_lookup = pd.DataFrame(data={'in_id': in_ids.values, 'in_idx': in_idx}, index=in_idx)
+    all_data = with_out_idx.merge(in_lookup, 'left')
+    print 'input data of shape: ', all_data.shape, ' after adding in idx'
+    edge_list = all_data[['out_idx', 'in_idx']]
+    edge_list.columns = ['out_idx', 'in_idx']
+    all_data.set_index('out_id', inplace=True)
+    y = all_data[['out_idx', 'mean_income']].drop_duplicates()
     X = utils.edge_list_to_sparse_mat(edge_list)
     return X, y, edge_list
 
@@ -57,6 +57,6 @@ if __name__ == '__main__':
     edge_path = '../../resources/users_friends.csv'
     # output paths
     edge_list_path = '../../resources/income.edgelist'
-    x_path = '../../resources/X.p'
-    y_path = '../../resources/y.p'
+    x_path = '../../resources/income_X.p'
+    y_path = '../../resources/income_y.p'
     preprocess_income_data(label_path, edge_path, x_path, y_path, edge_list_path)
