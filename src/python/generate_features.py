@@ -7,20 +7,18 @@ import pandas as pd
 import numpy as np
 
 
-def preprocess_income_data():
-    targets = pd.read_csv('local_resources/Socio_economic_classification_data/income_dataset/users-income', sep=' ')
+def preprocess_income_data(label_path, edge_path, x_path, y_path, edge_list_path):
+    targets = pd.read_csv(label_path, sep=' ')
     targets.columns = ['fan_id', 'mean_income']
     print 'target labels of shape: ', targets.shape
-    edges = pd.read_csv('local_resources/Socio_economic_classification_data/income_dataset/users_friends.csv')
+    edges = pd.read_csv(edge_path)
     edges.columns = ['fan_id', 'star_id']
     print 'edge list of shape: ', edges.shape
     all_data = edges.merge(targets)
     print 'all data of shape: ', all_data.shape
     X, y, edge_list = preprocess_data(all_data)
-    utils.persist_edgelist(edge_list,
-                           'local_resources/Socio_economic_classification_data/income_dataset/income.edgelist')
-    utils.persist_data('local_resources/Socio_economic_classification_data/income_dataset/X.p',
-                       'local_resources/Socio_economic_classification_data/income_dataset/y.p', X, y)
+    utils.persist_edgelist(edge_list, edge_list_path)
+    utils.persist_data(x_path, y_path, X, y)
 
 
 def preprocess_data(input_data):
@@ -54,4 +52,11 @@ def preprocess_data(input_data):
 
 
 if __name__ == '__main__':
-    preprocess_income_data()
+    # input paths
+    label_path = '../../resources/users-income'
+    edge_path = '../../resources/users_friends.csv'
+    # output paths
+    edge_list_path = '../../resources/income.edgelist'
+    x_path = '../../resources/X.p'
+    y_path = '../../resources/y.p'
+    preprocess_income_data(label_path, edge_path, x_path, y_path, edge_list_path)
