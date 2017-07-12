@@ -2,6 +2,8 @@ import pandas as pd
 import cPickle as pickle
 import numpy as np
 from sklearn.metrics import f1_score
+from scipy.sparse import lil_matrix
+
 
 __author__ = 'benchamberlain'
 
@@ -25,6 +27,21 @@ def read_data(x_path, y_path, threshold):
 def read_pickle(path):
     with open(path, 'rb') as infile:
         return pickle.load(infile)
+
+
+def edge_list_to_sparse_mat(edge_list):
+    """
+    Convert a pandas DF undirected edge list for a bipartite graph into a scipy csc sparse matrix.
+    Assumes that edges are contiguosly indexed starting at 0
+    :param edge_list: A pandas DF with columns [fan_idx, star_idx]
+    :return: A Columnar sparse matrix
+    """
+    # Create matrix representation (adjacency matrix) of edge list
+    data_shape = edge_list.max(axis=0)
+    print 'building sparse matrix of size {0}'.format(data_shape)
+    X = lil_matrix((data_shape['fan_idx'] + 1, data_shape['star_idx'] + 1), dtype=int)
+    X[edge_list['fan_idx'].values, edge_list['star_idx'].values] = 1
+    return X.tocsc()
 
 
 def remove_sparse_features(sparse_mat, threshold):
