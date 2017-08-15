@@ -54,7 +54,7 @@ def edge_list_to_sparse_mat(edge_list):
     X = lil_matrix((data_shape[edge_list.columns[0]] + 1,
                     data_shape[edge_list.columns[1]] + 1), dtype=int)
     X[edge_list[edge_list.columns[0]].values,
-                edge_list[edge_list.columns[1]].values] = 1
+      edge_list[edge_list.columns[1]].values] = 1
     return X.tocsc()
 
 
