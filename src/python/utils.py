@@ -29,6 +29,18 @@ def read_pickle(path):
         return pickle.load(infile)
 
 
+def persist_edgelist(edge_list, edge_list_path):
+    with open(edge_list_path, 'w') as f:
+        pickle.dump(edge_list, f)
+
+
+def persist_data(x_path, y_path, X, y):
+    with open(x_path, 'w') as f:
+        pickle.dump(X, f)
+    with open(y_path, 'w') as f:
+        pickle.dump(y, f)
+
+
 def edge_list_to_sparse_mat(edge_list):
     """
     Convert a pandas DF undirected edge list for a bipartite graph into a scipy csc sparse matrix.
