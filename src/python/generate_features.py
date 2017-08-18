@@ -47,8 +47,21 @@ def preprocess_data(input_data):
     edge_list.columns = ['out_idx', 'in_idx']
     all_data.set_index('out_id', inplace=True)
     y = all_data[['out_idx', 'mean_income']].drop_duplicates()
+    y = relabel(y)
     X = utils.edge_list_to_sparse_mat(edge_list)
     return X, y, edge_list
+
+
+def relabel(y):
+    uniq = pd.unique(y['mean_income'])
+    uniq.sort()
+    if uniq.max() > uniq.shape[0]:
+        print('Relabeling y')
+        bins = np.array(range(1, uniq.shape[0] + 1))
+        income_bins = [bins[uniq == i[1]][0] for i in y['mean_income'].iteritems()]
+        return pd.DataFrame(data={'out_idx': y['out_idx'], 'mean_income': income_bins})
+    else:
+        return y
 
 
 if __name__ == '__main__':
