@@ -30,6 +30,6 @@ into a terminal. This will create income_X.p and income_y.p files in the resourc
 
 If this code helps, please cite:
 
-Chamberlain, Benjamin Paul, Clive Humby, and Marc Peter Deisenroth. "Probabilistic Inference of Twitter Users’ Age based on What They Follow." Joint European Conference on Machine Learning and Knowledge Discovery in Databases. Springer International Publishing, 2017.
+Chamberlain, Benjamin Paul, Clive Humby, and Marc Peter Deisenroth. "Probabilistic Inference of Twitter Users’ Age based on What They Follow." Joint European Conference on Machine Learning and Principles and Practice of Knowledge Discovery in Databases. Springer International Publishing, 2017.
 
 
