@@ -26,7 +26,7 @@ def read_data(x_path, y_path, threshold):
 
 def read_pickle(path):
     with open(path, 'rb') as infile:
-        return pickle.load(infile)
+        return pd.read_pickle(infile)
 
 
 def edge_list_to_sparse_mat(edge_list):
