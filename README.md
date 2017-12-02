@@ -17,8 +17,11 @@ The code uses the numpy, pandas and scikit-learn python packages. We recommend i
 ### Data
 
 For privacy reasons we can't include the raw data age data. Instead we include two files
+
 (1) features.p is a pandas pickle file of a scipy sparse matrix of shape (31389, 50190). Each row is a single Twitter user with a labelled age. Each column is a Twitter user followed by more than 10 of the labeled accounts
+
 (2) labels.p is a pandas pickle file of a pandas dataframe of shape(31389, 2). Each row is an index into a row of features.p and an age label in {1,2,3,4,5,6,7} corresponding to an age of {10-20,20-30,30-40,40-50,50-60,60-70,70-80}. The data is sampled from a larger dataset in such a way that there are roughly equal numbers of each age class.
+
 
 To read the data 
 import pandas
