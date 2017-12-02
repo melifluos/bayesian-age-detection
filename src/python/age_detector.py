@@ -15,9 +15,10 @@ import argparse
 
 
 class AgeDetector:
-    def __init__(self):
+    def __init__(self, n_classes=7):
         print 'initialising age detector'
-        self.PRIOR = [1.0 / 7] * 7  # assume uniformative prior for the data sample
+        self.n_classes = n_classes
+        self.PRIOR = [1.0 / self.n_classes] * self.n_classes  # assume uniformative prior for the data sample
         self.model = None
 
     def _add_prior_knowledge(self, pos_counts, bucket_counts, n_data):
@@ -141,10 +142,11 @@ if __name__ == '__main__':
     parser.add_argument(
         '-nfolds', type=int,
         nargs='+', default=3, help='number of stratified folds to split the data into for cross-validation')
-
     args = parser.parse_args()
 
     x, y = utils.read_data(args.x_path[0], args.y_path[0], threshold=0)
-    clf = AgeDetector()
+    n_classes = len(np.unique(y))
+    print('n_classes: {}'.format(n_classes))
+    clf = AgeDetector(n_classes)
     n_folds = args.nfolds[0]
     y_pred = run_cv_pred(x, y, clf, n_folds)
