@@ -23,9 +23,12 @@ For privacy reasons we can't include the raw data age data. Instead we include t
 (2) labels.p is a pandas pickle file of a pandas dataframe of shape(31389, 2). Each row is an index into a row of features.p and an age label in {1,2,3,4,5,6,7} corresponding to an age of {10-20,20-30,30-40,40-50,50-60,60-70,70-80}. The data is sampled from a larger dataset in such a way that there are roughly equal numbers of each age class.
 
 
-To read the data 
+To read the data:
+
 import pandas
+
 x = pd.read_pickle('features.p')
+
 y = pd.read_pickle('labels.p')
 
 To increase the general utility of the code, we also include our pre-processing script and a public sample of Twitter data with labelled incomes. To generate features for this data set navigate to the src/python folder and type 
